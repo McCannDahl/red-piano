@@ -205,11 +205,11 @@ class _PianoScreenState extends State<PianoScreen> {
             child: Stack(
               children: [
                 Positioned(
-                  top: (-430 + currentNote * 57).toDouble(),
+                  top: (-330 + currentNote * 46).toDouble(),
                   left: 0,
                   child: Container(
-                    width: 160,
-                    height: 1700,
+                    width: 130,
+                    height: 1350,
                     child: Image.asset(
                       'assets/Treble_clef_and_Bass_clef.png',
                       fit: BoxFit.fill,
