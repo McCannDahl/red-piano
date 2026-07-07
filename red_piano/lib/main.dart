@@ -12,7 +12,12 @@ void main() {
 const sharpOrder = ['F', 'C', 'G', 'D', 'A', 'E', 'B'];
 
 const flatOrder = ['B', 'E', 'A', 'D', 'G', 'C', 'F'];
-String? noteLetter(int midi) {
+
+const sharpAccidentals = ['F#', 'C#', 'G#', 'D#', 'A#', 'E#', 'B#'];
+
+const flatAccidentals = ['Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb', 'Fb'];
+
+String? whiteNoteLetter(int midi) {
   switch (midi % 12) {
     case 0:
       return 'C';
@@ -29,7 +34,24 @@ String? noteLetter(int midi) {
     case 11:
       return 'B';
     default:
-      return null; // black key
+      return null;
+  }
+}
+
+String? accidentalName(int midi, AccidentalType type) {
+  switch (midi % 12) {
+    case 1:
+      return type == AccidentalType.sharps ? 'C#' : 'Db';
+    case 3:
+      return type == AccidentalType.sharps ? 'D#' : 'Eb';
+    case 6:
+      return type == AccidentalType.sharps ? 'F#' : 'Gb';
+    case 8:
+      return type == AccidentalType.sharps ? 'G#' : 'Ab';
+    case 10:
+      return type == AccidentalType.sharps ? 'A#' : 'Bb';
+    default:
+      return null;
   }
 }
 
@@ -293,15 +315,28 @@ class _PianoScreenState extends State<PianoScreen> {
   Map<int, Color> getButtonColors() {
     final colors = <int, Color>{};
 
-    final highlighted = settings.type == AccidentalType.sharps
+    final whiteHighlights = settings.type == AccidentalType.sharps
         ? sharpOrder.take(settings.count).toSet()
         : flatOrder.take(settings.count).toSet();
 
-    for (int midi = 0; midi <= 127; midi++) {
-      final letter = noteLetter(midi);
+    final blackHighlights = settings.type == AccidentalType.sharps
+        ? sharpAccidentals.take(settings.count).toSet()
+        : flatAccidentals.take(settings.count).toSet();
 
-      if (letter != null && highlighted.contains(letter)) {
-        colors[midi] = Colors.red;
+    for (int midi = 0; midi <= 127; midi++) {
+      final white = whiteNoteLetter(midi);
+
+      if (white != null) {
+        if (whiteHighlights.contains(white)) {
+          colors[midi] = Colors.red;
+        }
+        continue;
+      }
+
+      final accidental = accidentalName(midi, settings.type);
+
+      if (!(accidental != null && blackHighlights.contains(accidental))) {
+        colors[midi] = Colors.red.shade800;
       }
     }
 
