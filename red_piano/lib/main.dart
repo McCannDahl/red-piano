@@ -193,7 +193,7 @@ class _PianoScreenState extends State<PianoScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter Piano Pro'),
+        title: const Text('Plunk Piano'),
         actions: [
           // Down Arrow Action
           IconButton(
